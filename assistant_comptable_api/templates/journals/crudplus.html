@@ -1,0 +1,244 @@
+
+<script>
+    const BASE_URL_API = "/api/";
+    const BASE_URL_WEB = "/web/";
+    const model_name = "journals";
+
+    const MODEL_BASE_URL_API = BASE_URL_API+model_name+"/";
+    const MODEL_BASE_URL_WEB = BASE_URL_WEB+model_name+"/";
+    const CREATE_URL = MODEL_BASE_URL_WEB+"create/";
+    const UPDATE_URL = MODEL_BASE_URL_WEB+"update/";
+    const DELETE_URL = MODEL_BASE_URL_WEB+"delete/";
+
+    const modal_form_id = `create_or_update_modal`;
+    const modal_content = $(`#${modal_form_id}_content`);
+    const modal_form_object = $(`#${modal_form_id}`);
+    //const modal_export_data = new bootstrap.Modal($('#modal_export_data'));
+    
+    let datatable = function () {
+        // Variables partagées
+        let table;
+        let dt = $("#model_data").DataTable({
+            "searching": false,   
+            "lengthChange": false,
+            "paging": false,   
+            "info": false,
+            "rowCallback": function( row, data, index ) {
+                // Ajoutez ici votre logique pour personnaliser la classe de chaque <tr>
+                $(row).addClass('text-gray-700 dark:text-gray-400');
+            },
+            "createdRow": function( row, data, dataIndex ) {
+                // Ajoutez ici votre logique pour personnaliser la classe de chaque <td>
+                $('td', row).addClass('px-4 py-3 text-sm');
+            }
+        });
+
+        // Fonctions privées
+        let initDatatable = function () {
+            $.ajax({
+                url: `${MODEL_BASE_URL_API}`,
+                type: 'get',
+                dataType: 'json',
+                success: function (results) {
+                    console.log(results);
+                    results.forEach(function (data) {
+                        let new_row = dt.row.add([
+                            data.name,
+                            data.amount,
+                            generateActionMenu(data.id),
+                        ]).draw().node();
+                    });
+                },
+            })
+        }
+
+        let refreshDataTable = function() {
+            dt.clear().draw();
+            initDatatable();
+        }
+
+        // Suppression de ligne
+        var handleSearchDatatable = function () {
+            $('#input_table_filter').on('keyup', function (e) {
+                dt.search(e.target.value).draw();
+            });
+        }
+
+        // Méthodes publiques
+        return {
+            init: function () {
+                initDatatable();
+                handleSearchDatatable();
+            },
+            refresh: function () {
+                refreshDataTable();
+            }
+        }
+    }();
+
+    datatable.init();
+
+    function generateActionMenu(id) {
+        return `
+        <div class="flex items-center space-x-4 text-sm">
+            <button
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                aria-label="Edit"
+                onclick="edit_object(${id})">
+                <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                </svg>
+            </button>
+            <button
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                aria-label="Delete"
+                onclick="show_dialog_delete_object(${id}, '')">
+                <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                    fill-rule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clip-rule="evenodd"
+                ></path>
+                </svg>
+            </button>
+        </div>
+        `;
+    }
+
+    $(`#create_modal`).on('click', function () {
+        $.ajax({
+            url: CREATE_URL,
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                modal_form_object.show();
+            },
+            success: function (data) {
+                modal_content.html(data.html_form);
+                store_or_update_object(CREATE_URL);
+            }
+        });
+    });
+
+    function edit_object(id){
+        let tmp_update_url = `${UPDATE_URL}${id}/`;
+        $.ajax({
+            url: `${tmp_update_url}`,
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                modal_form_object.show();
+            },
+            success: function (data) {
+                modal_content.html(data.html_form);
+                store_or_update_object(tmp_update_url);
+            }
+        });
+    }
+
+    function store_or_update_object(url){
+        $(`#form_operation`).on('submit', function () {
+            stopEvent();
+            let form = $(this);
+            $.ajax({
+                url: url,
+                type: form.attr("method"),
+                data: form.serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.form_is_valid){
+                        if ("message" in data) {
+                            datatable.refresh();
+                            let icon = "success";
+                            let title = "Succès";
+                            let message = data["message"];
+                            modal_form_object.hide();
+                            showDialog(icon, title, message);
+                        }
+                    } else {
+                        $(modal_content).html(data.html_form);
+                        store_or_update_object(CREATE_URL);
+                        if ("error" in data){
+                            let icon = "error";
+                            let title = "Error";
+                            let message = data["error"];
+                            showDialog(icon, title, message);
+                        }
+                    }
+                    stopEvent();
+                    console.log("--");
+                }
+            });
+        });
+    }
+
+    function show_dialog_delete_object(id, object_message){
+        let title = "Êtes vous sur !";
+        let message = "Vous voulez supprimer " + object_message;
+
+        Swal.fire({
+            icon: "warning",
+            title: title,
+            text: message,
+            showConfirmButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonColor: "#F8285A",
+        }).then((response) => {
+            if (response.isConfirmed) {
+                delete_object(id);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    function delete_object(id){
+        $.ajax({
+            url: `${DELETE_URL}${id}/`,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                if ("message" in data) {
+                    datatable.refresh();
+                    let icon = "success";
+                    let title = "Succès";
+                    let message = data["message"];
+                    showDialog(icon, title, message);
+                    stopEvent();
+                }
+            }
+        });
+    }
+
+    function showDialog(icon, title, message){
+        Swal.fire({
+            icon: icon,
+            title: title.toUpperCase(),
+            text: message,
+            confirmButtonColor: "#5179d6",
+        });
+    }
+
+    function stopEvent(){
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    function closeModal(){
+        modal_form_object.hide();
+    }
+
+    function openModal(){
+        modal_form_object.show();
+    }
+</script>

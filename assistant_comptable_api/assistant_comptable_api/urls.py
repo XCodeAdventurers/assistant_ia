@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-
+from web.views import authView
 
 urlpatterns = [
+    path('login/', view=authView.custom_login, name="login"),
+    path('logout/', view=authView.custom_logout, name="logout"),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('web/', include('web.urls')),

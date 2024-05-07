@@ -4,6 +4,7 @@ from .views import (
     accountsViews,
     operationsViews,
     assistanceView,
+    journalsViews
 )
 
 app_name="web"
@@ -19,6 +20,11 @@ urlpatterns = [
     path('accounts/create/', view=accountsViews.create, name='user_create'),
     path('accounts/update/<int:id>/', view=accountsViews.update, name='accounts_update'),
     path('accounts/delete/<int:id>/', view=accountsViews.delete, name='accounts_delete'),
+
+    path('journals/', view=journalsViews.index, name='journals'),
+    path('journals/create/', view=journalsViews.create, name='journals_create'),
+    path('journals/update/<int:id>/', view=journalsViews.update, name='journals_update'),
+    path('journals/delete/<int:id>/', view=journalsViews.delete, name='journals_delete'),
 
     path('assistance', view=assistanceView.index, name='assistance'),
 

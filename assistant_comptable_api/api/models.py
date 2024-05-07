@@ -43,9 +43,12 @@ class Business(models.Model):
 
 class Journal(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nom")
-    amount = models.IntegerField(verbose_name="Montant")
+    amount = models.IntegerField(verbose_name="Montant", default=0)
     person = models.ForeignKey(Person, on_delete=models.CASCADE, null=True)
-    business = models.OneToOneField(Business, on_delete=models.CASCADE, null=True)
+    business = models.ForeignKey(Business, on_delete=models.CASCADE, null=True)
+    
+    def save(self, *args, **kargs):
+        super().save(*args, **kargs)
 
     def __str__(self):
         return self.name

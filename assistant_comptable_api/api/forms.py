@@ -17,7 +17,10 @@ class BusinessForm(forms.ModelForm):
 class JournalForm(forms.ModelForm):
     class Meta:
         model = Journal
-        fields = ('name', 'amount', 'person', 'business')
+        fields = ('name',)
+        widgets = {
+            'name': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+        }
 
 # class TransactionForm(forms.ModelForm):
 #     class Meta:
