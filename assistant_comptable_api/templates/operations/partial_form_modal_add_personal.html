@@ -16,17 +16,17 @@
             </label>
             <div class="flex w-full space-x-4">
                 <label class="block text-sm w-1/2">
-                    <span class="text-gray-700 dark:text-gray-400">Journals </span>
-                    {{ form.journal }}
-                    <span class="text-red-600">
-                        {{ form.journal.errors }}
-                    </span>
-                </label>
-                <label class="block text-sm w-1/2">
                     <span class="text-gray-700 dark:text-gray-400">Compte</span>
                     {{ form.account }}
                     <span class="text-red-600">
                         {{ form.account.errors }}
+                    </span>
+                </label>
+                <label class="block text-sm w-2/3">
+                    <span class="text-gray-700 dark:text-gray-400">Montant</span>
+                    {{ form.amount }}
+                    <span class="text-red-600">
+                        {{ form.amount.errors }}
                     </span>
                 </label>
             </div>
@@ -36,22 +36,6 @@
                     {{ form.ref }}
                     <span class="text-red-600">
                         {{ form.ref.errors }}
-                    </span>
-                </label>
-            </div>
-            <div class="flex w-full space-x-4" >
-                <label class="block text-sm w-1/3">
-                    <span class="text-gray-700 dark:text-gray-400">Type</span>
-                    {{ form.type_operation }}
-                    <span class="text-red-600">
-                        {{ form.type_operation.errors }}
-                    </span>
-                </label>
-                <label class="block text-sm w-2/3">
-                    <span class="text-gray-700 dark:text-gray-400">Montant</span>
-                    {{ form.amount }}
-                    <span class="text-red-600">
-                        {{ form.amount.errors }}
                     </span>
                 </label>
             </div>

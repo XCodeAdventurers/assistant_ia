@@ -1,6 +1,6 @@
 
 from api.models import Person, Business, Journal, AccountType, Account, Operation, PromptTemplate
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 def run():
     User.objects.exclude(username__in=["amk"]).delete()
@@ -11,7 +11,18 @@ def run():
     ]
     for m in models:
         m.objects.all().delete()
-        
+    
+    # Créer les groupes 
+    Group.objects.get_or_create("account_plan_business")
+    Group.objects.get_or_create("account_plan_personal")
+    
+    #Créer les types de compte
+    AccountType.objects.create(name="Produit", debit_operation=AccountType.OPERATIONS[1][0], credit_operation=AccountType.OPERATIONS[0][0])
+    AccountType.objects.create(name="Charge", debit_operation=AccountType.OPERATIONS[0][0], credit_operation=AccountType.OPERATIONS[1][0])
+    AccountType.objects.create(name="Actif", debit_operation=AccountType.OPERATIONS[0][0], credit_operation=AccountType.OPERATIONS[1][0])
+    AccountType.objects.create(name="Passif", debit_operation=AccountType.OPERATIONS[1][0], credit_operation=AccountType.OPERATIONS[0][0])
+
+
     data_person = [
         {
             "profil": "",
@@ -25,7 +36,7 @@ def run():
     
     for data in data_person:
         person = Person(**data)
-        person.bind_user("", "123456789")
+        person.bind_user("123456789")
     
     data_business = [
         {
@@ -41,37 +52,4 @@ def run():
     for data in data_business:
         Business.objects.create(**data)
     
-    data_transaction = [
-        {
-            "create_at": "",
-            "update_at": "",
-            "journal": ""
-        }
-    ]
     
-    data_account_type = [
-        {
-            "name": "",
-            "debit_operation": "",
-            "credit_operation": ""
-        }
-    ]
-    
-    data_account = [
-        {
-            "number": "400",
-            "name": "Client",
-            "description": "",
-            "account_type": ""
-        }
-    ]
-
-    data_prompt_template = [
-        {
-            "name": "",
-            "prompt": ""
-        }
-    ]
-
-
-

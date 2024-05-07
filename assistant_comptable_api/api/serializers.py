@@ -39,7 +39,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class OperationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operation
-        fields = ('id', 'ref', 'amount', 'type_operation', 'description', 'account')
+        fields = ('id', 'ref', 'amount', 'type_operation', 'libelle', 'account')
 
 class PromptTemplateSerializer(serializers.ModelSerializer):
     class Meta:
