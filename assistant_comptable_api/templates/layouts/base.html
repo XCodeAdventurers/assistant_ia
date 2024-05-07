@@ -1,0 +1,36 @@
+{% load static %}
+{% load django_browser_reload %}
+<!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blank - Windmill Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static '/assets/css/tailwind.output.css' %}" />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"defer></script>
+    <script src="{% static '/assets/js/init-alpine.js' %}"></script>
+    <script src="{% static '/assets/js/focus-trap.js' %}" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div
+      class="flex h-screen bg-gray-50 dark:bg-gray-900"
+      :class="{ 'overflow-hidden': isSideMenuOpen}">
+      {% include "layouts/sibebar.html" %}
+      <div class="flex flex-col flex-1">
+        {% include "layouts/navbar.html" %}
+        <main class="h-full pb-16 overflow-y-auto">
+          {% block content %}{% endblock content %}          
+        </main>
+      </div>
+    </div>
+    {% django_browser_reload_script %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="{% static "/assets/js/sweet_alert.js" %}"></script>
+    {% block javascript %}
+    {% endblock javascript %}
+  </body>
+</html>
+
