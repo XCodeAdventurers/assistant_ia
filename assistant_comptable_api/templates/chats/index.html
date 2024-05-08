@@ -1,28 +1,135 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<div class="container px-6 mx-auto grid">
-    
+<div id="main-container" class="container px-6 mx-auto grid">
     <h1 class="text-3xl my-6 font-semibold mb-8">{{ title }}</h1>
     <div class="container mx-auto py-8">
-        <div class="mx-auto bg-white rounded-lg shadow-md p-8">
-            <form id="chatForm" class="space-y-4">
-                <div>
-                    <label for="message" class="block font-medium text-gray-700">Votre Question</label>
-                    <textarea id="message" name="message" rows="3" class="form-textarea mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Entrez votre message ici..."></textarea>
-                </div>
-                <div class="flex flex-row-reverse">
-                    <button type="button" class="ml-3 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        
-                    </button>
-                    <button type="button" class="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50">Envoyer</button>
-                </div>
-            </form>
-            <div id="chatOutput" hidden class="mt-8 p-3 bg-gray-200 rounded-md border border-gray-300">
-                <div>
-
-                </div>
+        {% comment %} <label class="block text-sm mb-6">
+            <span class="text-gray-700 dark:text-gray-400">Name</span>
+            <input
+              class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+              placeholder="Jane Doe"
+            />
+        </label> {% endcomment %}
+        <div class="grid gap-6 mb-8 grid-cols-2 md:grid-cols-4">
+            {% for prompts_template in prompts_templates  %}
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 font-semibold text-gray-600 dark:text-gray-300">
+                {{ prompts_template.name }}
+                </h4>
+                <p class="text-gray-600 dark:text-gray-400">
+                {{ prompts_template.prompt }}
+                </p>
+            </div>
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 font-semibold text-gray-600 dark:text-gray-300">
+                {{ prompts_template.name }}
+                </h4>
+                <p class="text-gray-600 dark:text-gray-400">
+                {{ prompts_template.prompt }}
+                </p>
+            </div>
+            <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <h4 class="mb-4 font-semibold text-gray-600 dark:text-gray-300">
+                {{ prompts_template.name }}
+                </h4>
+                <p class="text-gray-600 dark:text-gray-400">
+                {{ prompts_template.prompt }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mx-auto rounded-lg shadow-md p-8 bg-red-600">
+            <div id="stream-container" hidden class="mt-8 p-3 rounded-md border border-gray-300">
+            </div>
+            <div class="w-full">
+                <form id="chatForm" method="post" class="space-y-4 p-3 w-full">
+                    {% csrf_token %}
+                    <div>
+                        <label for="message" class="block font-medium text-gray-700">Votre Question</label>
+                        <textarea id="message" name="message" rows="3" class="form-textarea mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Entrez votre message ici..."></textarea>
+                    </div>
+                    <div class="flex flex-row-reverse">
+                        <button type="button" class="ml-3 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            
+                        </button>
+                        <button type="submit" id="submit_input" class="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50">Envoyer</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock content %}
+{% block javascript %}
+<script>
+    $(document).ready(function(){
+        $('#stream-container').hide();
+
+        let on_response_btn_classe = "bg-gray-200 text-white py-2 px-4 rounded-md"
+        let default_btn_classe = "bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50";
+        
+
+        let form_elt = $('#chatForm');
+        
+        form_elt.on('submit', function(event){
+            event.preventDefault();
+            let form = $(this);
+            $.ajax({
+                url: "{% url 'web:stream_view' %}",
+                type: form.attr("method"),
+                data: form.serialize(),
+                beforeSend: function() {
+                    $('#submit_input').removeClass(default_btn_classe);
+                    $('#submit_input').addClass(on_response_btn_classe);
+                    $('#submit_input').attr('disabled', true);
+                },
+                success: function(data){
+                    $('#stream-container').show();
+                    $('#stream-container').html(data);
+                    
+                    $('#submit_input').removeClass(on_response_btn_classe);
+                    $('#submit_input').addClass(default_btn_classe);
+                    $('#submit_input').attr('disabled', false);
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                    $('#submit_input').removeClass(on_response_btn_classe);
+                    $('#submit_input').addClass(default_btn_classe);
+                    $('#submit_input').attr('disabled', false);
+                },
+                complete: function(){
+                    console.log("Stream complete.");
+                    $('submit_form').prop('disabled', false);
+                }
+            });
+        });
+
+        /*function fixFormToBottom() {
+            let windowHeight = $(window).height();
+            let mainContainerHeight = $('#main-container').outerHeight();
+            let footerHeight = $('#chatForm').outerHeight();
+            let scrollPosition = $(window).scrollTop();
+    
+            if (windowHeight > mainContainerHeight + footerHeight) {
+                $('#chatForm').css({
+                    position: 'fixed',
+                    bottom: '0'
+                });
+            } else {
+                $('#chatForm').css({
+                    position: 'static'
+                });
+            }
+        }
+    
+        // Appeler la fonction pour fixer le formulaire au chargement de la page
+        fixFormToBottom();
+    
+        // Appeler la fonction à chaque fois que la fenêtre est redimensionnée ou défilée
+        $(window).on('resize scroll', function(){
+            fixFormToBottom();
+        }); */
+    });
+</script>
+{% endblock javascript %}

@@ -13,6 +13,7 @@
     const modal_form_id = `create_or_update_modal`;
     const modal_content = $(`#${modal_form_id}_content`);
     const modal_form_object = $(`#${modal_form_id}`);
+    const is_comptable = false;
     //const modal_export_data = new bootstrap.Modal($('#modal_export_data'));
     
     let datatable = function () {
@@ -46,6 +47,9 @@
                             data.account_type.name,
                             data.number,
                             data.name,
+                            data.solde_debit,
+                            data.solde_credit,
+                            data.solde,
                             generateActionMenu(data.id),
                         ]).draw().node();
                     });
@@ -137,7 +141,7 @@
             type: 'get',
             dataType: 'json',
             beforeSend: function () {
-                modal_form_object.removeClass("hidden")
+                modal_form_object.show();
             },
             success: function (data) {
                 modal_content.html(data.html_form);

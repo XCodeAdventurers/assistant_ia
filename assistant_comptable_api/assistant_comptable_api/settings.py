@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+import google.generativeai as genai
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,8 +29,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+LOGIN_URL = "/login"
 # Application definition
+
+GOOGLE_API_KEY="AIzaSyBm6qXO2Br_0wnqd_UVNsN7NrdhTVhsBz4"
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'assistant_comptable_api.context_processor.context'
             ],
         },
     },
@@ -135,3 +140,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+genai.configure(api_key=GOOGLE_API_KEY)
+MODEL = genai.GenerativeModel('gemini-pro')

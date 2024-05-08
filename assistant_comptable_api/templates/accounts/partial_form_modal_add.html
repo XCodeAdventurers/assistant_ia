@@ -16,10 +16,10 @@
                     </span>
                 </label>
                 <label class="block text-sm w-1/2">
-                    <span class="text-gray-700 dark:text-gray-400">Numéro du compte</span>
-                    {{ form.number }}
+                    <span class="text-gray-700 dark:text-gray-400">Catégorie</span>
+                    {{ form.categorie }}
                     <span class="text-red-600">
-                        {{ form.number.errors }}
+                        {{ form.categorie.errors }}
                     </span>
                 </label>
             </div>
@@ -29,6 +29,15 @@
                     {{ form.name }}
                     <span class="text-red-600">
                         {{ form.name.errors }}
+                    </span>
+                </label>
+            </div>
+            <div class="flex w-full space-x-4">
+                <label class="block text-sm w-full">
+                    <span class="text-gray-700 dark:text-gray-400">Sold Initiale</span>
+                    {{ form.solde }}
+                    <span class="text-red-600">
+                        {{ form.solde.errors }}
                     </span>
                 </label>
             </div>

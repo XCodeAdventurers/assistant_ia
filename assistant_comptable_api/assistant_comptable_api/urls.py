@@ -22,6 +22,7 @@ from web.views import authView
 
 urlpatterns = [
     path('login/', view=authView.custom_login, name="login"),
+    path('register/', view=authView.custom_register, name="register"),
     path('logout/', view=authView.custom_logout, name="logout"),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),

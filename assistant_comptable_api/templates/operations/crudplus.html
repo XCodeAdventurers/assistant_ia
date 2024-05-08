@@ -47,7 +47,7 @@
                             data.ref,
                             data.amount,
                             data.type_operation,
-                            data.account,
+                            data.account.name,
                             generateActionMenu(data.id),
                         ]).draw().node();
                     });
@@ -139,7 +139,7 @@
             type: 'get',
             dataType: 'json',
             beforeSend: function () {
-                modal_form_object.removeClass("hidden")
+                modal_form_object.show()
             },
             success: function (data) {
                 modal_content.html(data.html_form);

@@ -29,7 +29,7 @@ class AccountTypeSerializer(serializers.ModelSerializer):
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('id', 'number', 'name', 'description', 'account_type')
+        fields = ('id', 'number', 'name', 'description', 'account_type', 'solde', 'solde_debit', 'solde_credit')
     
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -39,7 +39,12 @@ class AccountSerializer(serializers.ModelSerializer):
 class OperationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operation
-        fields = ('id', 'ref', 'amount', 'type_operation', 'description', 'account')
+        fields = ('id', 'ref', 'amount', 'type_operation', 'libelle', 'account')
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['account'] = AccountSerializer(instance.account).data
+        return data
 
 class PromptTemplateSerializer(serializers.ModelSerializer):
     class Meta:

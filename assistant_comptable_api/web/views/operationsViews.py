@@ -11,8 +11,12 @@ MODEL_MANE = "operation"
 ROOT_FOLDER = "operations"
 INDEX_PATH = f"{ROOT_FOLDER}/index.html"
 FORM_PARTIAL_PATH = f"{ROOT_FOLDER}/partial_form_modal_add.html"
+FORM_PARTIAL_PERSONAL_PATH = f"{ROOT_FOLDER}/partial_form_modal_add_personal.html"
 
 def index(request):
+    accounts = Account.objects.all()
+    journals = Journal.objects.all()
+    type_operations = Operation.TYPES_OPERATIONS
     data = {
         "title" : ROOT_FOLDER,
         "model_name": MODEL_MANE,
@@ -31,16 +35,10 @@ def create(request):
         data['form_is_valid'] = form_is_valid
     else:
         form = OperationForm()
-        
-    accounts = Account.objects.all()
-    journals = Journal.objects.all()
-    type_operations = Operation.TYPES_OPERATIONS
+    print(form.errors)
     context = {
         'form': form,
         'title' : "Ajouter une opération",
-        'accounts': accounts,
-        'type_operations': type_operations,
-        'journals': journals,
     }
     
     data['html_form'] = render_to_string(

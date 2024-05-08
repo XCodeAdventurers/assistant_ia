@@ -5,17 +5,19 @@ from django.shortcuts import HttpResponse, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from api.forms import AccountForm
-from api.models import AccountType, Account
+from api.models import AccountCategory, AccountType, Account, Person
 
 MODEL_MANE = "account"
 ROOT_FOLDER = "accounts"
 INDEX_PATH = f"{ROOT_FOLDER}/index.html"
 FORM_PARTIAL_PATH = f"{ROOT_FOLDER}/partial_form_modal_add.html"
 
+@login_required(login_url=settings.LOGIN_URL)
 def index(request):
     data = {
         "title" : "Compte",
         "model_name": MODEL_MANE,
+        "account_categories": AccountCategory.objects.all(),
     }
     return render(request, INDEX_PATH, context=data)
 
@@ -26,8 +28,9 @@ def create(request):
         form_is_valid = form.is_valid()
         print(form_is_valid)
         if form_is_valid:
-            operation = form.save()
-            data['message'] = f"L'operation {operation} !"
+            account = Person.save_account(form, request.user)
+            account.calculate_amount()
+            data['message'] = f"L'account {account} !"
         data['form_is_valid'] = form_is_valid
     else:
         form = AccountForm()
@@ -54,7 +57,8 @@ def update(request, id):
         form = AccountForm(request.POST, instance=account)
         form_is_valid = form.is_valid()
         if form_is_valid:
-            account = form.save()
+            account = Person.save_account(form, request.user)
+            account.calculate_amount()
             data['message'] = f"L'account {account} !"
         data['form_is_valid'] = form_is_valid
     else:

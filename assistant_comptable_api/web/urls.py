@@ -27,6 +27,6 @@ urlpatterns = [
     path('journals/delete/<int:id>/', view=journalsViews.delete, name='journals_delete'),
 
     path('assistance', view=assistanceView.index, name='assistance'),
-
+    path('stream/', assistanceView.streamView, name='stream_view'),
 ]
 

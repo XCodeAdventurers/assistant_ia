@@ -7,20 +7,25 @@
     </h2>
     <div class="flex items-center justify-between space-x-4 mb-4">
         <div class="flex space-x-4">
-            <label class="block mt-4 text-sm">
-                <span class="text-gray-700 dark:text-gray-400">
-                  Journals
-                </span>
-                <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
-                  <option></option>
-                </select>
-            </label>
+            {% if false %}
+              <label class="block mt-4 text-sm">
+                  <span class="text-gray-700 dark:text-gray-400">
+                    Journal
+                  </span>
+                  <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                    <option></option>
+                  </select>
+              </label>
+            {% endif %}
             <label class="block mt-4 text-sm">
                 <span class="text-gray-700 dark:text-gray-400">
                   Compte
                 </span>
                 <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
-                  <option></option>
+                  <option value="-1">Sélectionner</option>
+                  {% for account in accounts %}
+                    <option value="{{ account.id }}"> {{ account.name }} </option>
+                  {% endfor %}
                 </select>
             </label>
             {% comment %} <label class="block mt-4 text-sm">
