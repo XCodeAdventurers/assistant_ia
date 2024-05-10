@@ -47,7 +47,7 @@ def dashboard(request):
     savings_balance = []
 
     # Comparaison des dépenses avec les budgets fixés
-    budgets = Budget.objects.all()
+    budgets = Budget.objects.filter(user=request.user)
     expenses_vs_budgets = []
     for budget in budgets:
         total_expenses_for_budget = Transaction.objects.filter(category=budget.category, date__range=(start_date, end_date), user=request.user).aggregate(total=Sum('amount'))['total'] or 0

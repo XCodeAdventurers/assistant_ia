@@ -40,7 +40,7 @@ def custom_login(request):
                 user = authenticate(request, username=person.user.username, password=password)
                 if user:
                     login(request, user=user)
-                    return redirect('/money_tracker/accounts')
+                    return redirect('/money_tracker/')
         data['error'] = "Idendifiant incorrect"
     data['show_silder'] = True
     return render(request, 'auth/login.html', context=data)
