@@ -12,7 +12,7 @@
                   <span class="text-gray-700 dark:text-gray-400">
                     Journal
                   </span>
-                  <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                  <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:focus:shadow-outline-gray">
                     <option></option>
                   </select>
               </label>
@@ -21,7 +21,7 @@
                 <span class="text-gray-700 dark:text-gray-400">
                   Compte
                 </span>
-                <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:focus:shadow-outline-gray">
                   <option value="-1">Sélectionner</option>
                   {% for account in accounts %}
                     <option value="{{ account.id }}"> {{ account.name }} </option>
@@ -32,7 +32,7 @@
                 <span class="text-gray-700 dark:text-gray-400">
                   Transactions
                 </span>
-                <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:focus:shadow-outline-gray">
                   <option></option>
                 </select>
             </label> {% endcomment %}
@@ -40,19 +40,19 @@
                 <span class="text-gray-700 dark:text-gray-400">
                   Début
                 </span>
-                <input type="date" class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-input focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" />
+                <input type="date" class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-input focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:focus:shadow-outline-gray" />
             </label>
             <label class="block mt-4 text-sm">
                 <span class="text-gray-700 dark:text-gray-400">
                   Fin
                 </span>
-                <input type="date" class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-input focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" />
+                <input type="date" class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-input focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:focus:shadow-outline-gray" />
             </label>
         </div>
         <div class="mt-4">
             <button 
                 id="create_modal"
-                class="mt-4 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                class="mt-4 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-yellow-600 border border-transparent rounded-lg active:bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:shadow-outline-yellow">
                   Ajouter
             </button>
         </div>
@@ -90,7 +90,7 @@
                 <td class="px-4 py-3">
                   <div class="flex items-center space-x-4 text-sm">
                     <button
-                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-yellow-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                       aria-label="Edit">
                       <svg
                         class="w-5 h-5"
@@ -102,7 +102,7 @@
                       </svg>
                     </button>
                     <button
-                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                      class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-yellow-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                       aria-label="Delete">
                       <svg
                         class="w-5 h-5"
@@ -133,7 +133,7 @@
               <ul class="inline-flex items-center">
                 <li>
                   <button
-                    class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
+                    class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-yellow"
                     aria-label="Previous"
                   >
                     <svg
@@ -151,28 +151,28 @@
                 </li>
                 <li>
                   <button
-                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-yellow"
                   >
                     1
                   </button>
                 </li>
                 <li>
                   <button
-                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-yellow"
                   >
                     2
                   </button>
                 </li>
                 <li>
                   <button
-                    class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple"
+                    class="px-3 py-1 text-white transition-colors duration-150 bg-yellow-600 border border-r-0 border-yellow-600 rounded-md focus:outline-none focus:shadow-outline-yellow"
                   >
                     3
                   </button>
                 </li>
                 <li>
                   <button
-                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-yellow"
                   >
                     4
                   </button>
@@ -182,21 +182,21 @@
                 </li>
                 <li>
                   <button
-                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-yellow"
                   >
                     8
                   </button>
                 </li>
                 <li>
                   <button
-                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-yellow"
                   >
                     9
                   </button>
                 </li>
                 <li>
                   <button
-                    class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
+                    class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-yellow"
                     aria-label="Next"
                   >
                     <svg

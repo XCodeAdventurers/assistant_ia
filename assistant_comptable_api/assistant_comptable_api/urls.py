@@ -19,14 +19,24 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from web.views import authView
+from web.views import homeViews
 
 urlpatterns = [
+    path('', view=homeViews.home, name="login"),
+    path('politiques/', view=authView.politique, name="politiques"),
     path('login/', view=authView.custom_login, name="login"),
     path('register/', view=authView.custom_register, name="register"),
     path('logout/', view=authView.custom_logout, name="logout"),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('web/', include('web.urls')),
+    path('money_tracker/', include('web.urls')),
+    path('', include('paypal.standard.ipn.urls')),
+    path('checkout/', authView.checkout, name='checkout'),
+    path('payment-success/', authView.success, name='payment-success'),
+    path('payment-failed/', authView.errors, name='payment-failed'),
+    path('cinet_pay_payement/', authView.cinet_pay_payement, name="cinet_pay_payement"),
+    path('payment-cinet-pay-success/', authView.cinet_pay_success, name='payment-cinet-pay-success'),
+    path('payment-cinet-pay-failed/', authView.cinet_pay_errors, name='payment-cinet-pay-failed'),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 

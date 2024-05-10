@@ -1,0 +1,226 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<div class="container px-6 mx-auto grid">
+    <h2
+      class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+      {{ title }}
+    </h2>
+    <div class="flex items-center space-x-4 mb-4 justify-between">
+      <form action="" method="get" id="filter_form">
+        <div class="flex space-x-3">
+          <label class="block text-sm w-full">
+              <span class="text-gray-700 dark:text-gray-400">Date Debut </span>
+              <input type="date" onchange="this.form.submit();" value="{{ start_date|date:'Y-m-d' }}" name="start_date" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
+          </label>
+          <label class="block text-sm w-full">
+            <span class="text-gray-700 dark:text-gray-400">Date Fin </span>
+            <input type="date" onchange="this.form.submit();" value="{{ end_date|date:'Y-m-d' }}" name="end_date" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:text-gray-300 dark:focus:shadow-outline-gray form-input">
+          </label>
+        </div>
+      </form>
+        <div class="mt-4">
+          <button 
+              id="create_modal"
+              class="mt-4 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-yellow-600 border border-transparent rounded-lg active:bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:shadow-outline-yellow">
+                Imprimer
+          </button>
+        </div>
+    </div>
+    <div class="w-full overflow-hidden rounded-lg shadow-xs">
+        <div class="w-full overflow-x-auto">
+          <!-- Répartition des dépenses par catégorie -->
+          <div class="mb-8">
+              <h2 class="text-xl font-semibold mb-2">Répartition des dépenses par catégorie</h2>
+              <canvas id="expensesByCategoryChart" width="400" height="200"></canvas>
+          </div>
+
+          <!-- Évolution des dépenses au fil du temps -->
+          <div class="mb-8">
+              <h2 class="text-xl font-semibold mb-2">Évolution des dépenses au fil du temps</h2>
+              <canvas id="monthlyExpensesChart" width="400" height="200"></canvas>
+          </div>
+
+          <!-- Comparaison des revenus et des dépenses -->
+          <div class="mb-8">
+              <h2 class="text-xl font-semibold mb-2">Comparaison des revenus et des dépenses</h2>
+              <canvas id="monthlyIncomeVsExpensesChart" width="400" height="200"></canvas>
+          </div>
+
+          <!-- Évolution de l'épargne au fil du temps -->
+          <div class="mb-8">
+              <h2 class="text-xl font-semibold mb-2">Évolution de l'épargne au fil du temps</h2>
+              <canvas id="savingsBalanceChart" width="400" height="200"></canvas>
+          </div>
+
+          <!-- Comparaison des dépenses avec les budgets fixés -->
+          <div class="mb-8">
+              <h2 class="text-xl font-semibold mb-2">Comparaison des dépenses avec les budgets fixés</h2>
+              <canvas id="expensesVsBudgetsChart" width="400" height="200"></canvas>
+          </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      var ctx = document.getElementById('expensesByCategoryChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: [{% for category in expenses_by_category %}"{{ category.category }}", {% endfor %}],
+              datasets: [{
+                  label: 'Dépenses par catégorie',
+                  data: [{% for category in expenses_by_category %}{{ category.total_expenses }}, {% endfor %}],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+  });
+
+  // Évolution des dépenses au fil du temps
+    var ctxMonthlyExpenses = document.getElementById('monthlyExpensesChart').getContext('2d');
+    var myMonthlyExpensesChart = new Chart(ctxMonthlyExpenses, {
+        type: 'line',
+        data: {
+            labels: [{% for entry in monthly_expenses %}"{{ entry.date__month }}", {% endfor %}],
+            datasets: [{
+                label: 'Dépenses mensuelles',
+                data: [{% for entry in monthly_expenses %}{{ entry.total }}, {% endfor %}],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // Comparaison des revenus et des dépenses
+    var ctxMonthlyIncomeVsExpenses = document.getElementById('monthlyIncomeVsExpensesChart').getContext('2d');
+    var myMonthlyIncomeVsExpensesChart = new Chart(ctxMonthlyIncomeVsExpenses, {
+        type: 'bar',
+        data: {
+            labels: [{% for entry in monthly_income %}"{{ entry.date__month }}", {% endfor %}],
+            datasets: [{
+                label: 'Revenus mensuels',
+                data: [{% for entry in monthly_income %}{{ entry.total }}, {% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Dépenses mensuelles',
+                data: [{% for entry in monthly_expenses_comparison %}{{ entry.total }}, {% endfor %}],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // Évolution de l'épargne au fil du temps
+    var ctxSavingsBalance = document.getElementById('savingsBalanceChart').getContext('2d');
+    var mySavingsBalanceChart = new Chart(ctxSavingsBalance, {
+        type: 'line',
+        data: {
+            labels: [], // Insérer les étiquettes appropriées ici
+            datasets: [{
+                label: 'Solde d\'épargne',
+                data: [], // Insérer les données appropriées ici
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    var ctxExpensesVsBudgets = document.getElementById('expensesVsBudgetsChart').getContext('2d');
+    var myExpensesVsBudgetsChart = new Chart(ctxExpensesVsBudgets, {
+        type: 'bar',
+        data: {
+            labels: [{% for entry in expenses_vs_budgets %}"{{ entry.budget_name }}", {% endfor %}],
+            datasets: [{
+                label: 'Dépenses réelles',
+                data: [{% for entry in expenses_vs_budgets %}{{ entry.total_expenses }}, {% endfor %}],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Budgets fixés',
+                data: [{% for entry in expenses_vs_budgets %}{{ entry.budget_amount }}, {% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+  </script>
+  
+{% endblock javascript %}
+
+
+
+

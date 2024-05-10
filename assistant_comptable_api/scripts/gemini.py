@@ -43,12 +43,13 @@ Classe  1       ‐       Comptes         de      ressources      durables
 109 Actionnaires, capital souscrit, non appelé 
     """
     response = model.generate_content(
-      ["Quelle est le numéro du compte capital social", context], 
-      stream=True
+      "Quelle est le numéro du compte capital social", 
+      stream=False
       )
-    for chunk in response:
-      print(chunk.text)
-      print("_"*80)
+    print(response.text)
+    # for chunk in response:
+    #   print(chunk.text)
+    #   print("_"*80)
       
       
     

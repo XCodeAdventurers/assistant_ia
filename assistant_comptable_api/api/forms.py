@@ -1,8 +1,8 @@
 from django import forms
-from .models import Person, AccountCategory, Business, Journal, AccountType, Account, Operation, PromptTemplate
+from .models import Person, Category, AccountType, Account, Transaction, Budget, FinancialGoal
 
-SELECT_CLASSE = "block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-INPUT_CLASSE = "block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+SELECT_CLASSE = "block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:focus:shadow-outline-gray"
+INPUT_CLASSE = "block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-yellow-400 focus:outline-none focus:shadow-outline-yellow dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
 
 class PersonForm(forms.ModelForm):
     class Meta:
@@ -16,63 +16,75 @@ class PersonForm(forms.ModelForm):
             'sexe': forms.Select(attrs={'class': INPUT_CLASSE}, choices=Person.SEXE_CHOICES),
         }
 
-class BusinessForm(forms.ModelForm):
+class CategoryForm(forms.ModelForm):
     class Meta:
-        model = Business
-        fields = ('name', 'localisation_gps', 'country', 'town', 'district')
-        widgets = {
-            'name': forms.TextInput(attrs={'class': INPUT_CLASSE}),
-            'country': forms.TextInput(attrs={'class': INPUT_CLASSE}),
-            'town': forms.TextInput(attrs={'class': INPUT_CLASSE}),
-            'district': forms.TextInput(attrs={'class': INPUT_CLASSE}),
-        }
-     
-class JournalForm(forms.ModelForm):
-    class Meta:
-        model = Journal
+        model = Category
         fields = ('name',)
         widgets = {
             'name': forms.TextInput(attrs={'class': INPUT_CLASSE}),
         }
 
-# class TransactionForm(forms.ModelForm):
-#     class Meta:
-#         model = Transaction
-#         fields = ('journal', )
-
 class AccountTypeForm(forms.ModelForm):
     class Meta:
         model = AccountType
-        fields = ('name', 'debit_operation', 'credit_operation')
+        fields = ('name',)
+        widgets = {
+            'name': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+        }
 
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ('number', 'name', 'description', 'account_type', 'categorie', 'solde', )
+        fields = ('user', 'account_type', 'account_name', 'balance')
         widgets = {
-            'name': forms.TextInput(attrs={'class': INPUT_CLASSE}),
-            'number': forms.NumberInput(attrs={'class': INPUT_CLASSE}),
-            'solde': forms.NumberInput(attrs={'class': INPUT_CLASSE}),
-            'account_type': forms.Select(attrs={'class': SELECT_CLASSE}, choices=Operation.TYPES_OPERATIONS),
-            'description': forms.Textarea(attrs={'class': INPUT_CLASSE}),
-            'categorie': forms.Select(attrs={'class': SELECT_CLASSE}, choices=AccountCategory.objects.all()),
+            'user': forms.Select(attrs={'class': SELECT_CLASSE}),
+            'account_type': forms.Select(attrs={'class': SELECT_CLASSE}),
+            'account_name': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+            'balance': forms.NumberInput(attrs={'class': INPUT_CLASSE}),
         }
-        
-class OperationForm(forms.ModelForm):
+
+class TransactionForm(forms.ModelForm):
     class Meta:
-        model = Operation
-        fields = ('ref', 'amount', 'type_operation', 'libelle', 'account', 'journal', 'fichier')
+        model = Transaction
+        fields = ('user', 'account', 'amount', 'transaction_type', 'category', 'document', 'label', 'budget')
         widgets = {
-            'ref': forms.TextInput(attrs={'class': INPUT_CLASSE}),
-            'amount': forms.NumberInput(attrs={'class': INPUT_CLASSE}),
-            'type_operation': forms.Select(attrs={'class': SELECT_CLASSE}, choices=Operation.TYPES_OPERATIONS),
-            'libelle': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+            'user': forms.Select(attrs={'class': SELECT_CLASSE}),
             'account': forms.Select(attrs={'class': SELECT_CLASSE}),
-            'journal': forms.Select(attrs={'class': SELECT_CLASSE}),
-            'fichier': forms.FileInput(attrs={'class': INPUT_CLASSE}),
+            'amount': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+            'transaction_type': forms.Select(attrs={'class': SELECT_CLASSE}),
+            'category': forms.Select(attrs={'class': SELECT_CLASSE}),
+            'document': forms.FileInput(attrs={'class': INPUT_CLASSE}),
+            'label': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+            'budget': forms.Select(attrs={'class': SELECT_CLASSE}),
         }
         
-class PromptTemplateForm(forms.ModelForm):
+        # def clean(self):
+        #     data = super().clean()
+        #     amount = self.cleaned_data["amount"]
+        #     budget = self.cleaned_data["budget"]
+        #     print(budget)
+        #     return data
+
+class BudgetForm(forms.ModelForm):
     class Meta:
-        model = PromptTemplate
-        fields = ('name', 'prompt')
+        model = Budget
+        fields = ('user', 'category', 'amount', 'start_date', 'end_date', 'cloturer')
+        widgets = {
+            'user': forms.Select(attrs={'class': SELECT_CLASSE}),
+            'category': forms.Select(attrs={'class': SELECT_CLASSE}),
+            'amount': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+            'start_date': forms.DateInput(attrs={'class': INPUT_CLASSE, "type": "date"}),
+            'end_date': forms.DateInput(attrs={'class': INPUT_CLASSE, "type": "date"}),
+        }
+    
+
+class FinancialGoalForm(forms.ModelForm):
+    class Meta:
+        model = FinancialGoal
+        fields = ('user', 'goal_name', 'target_amount', 'deadline')
+        widgets = {
+            'user': forms.Select(attrs={'class': SELECT_CLASSE}),
+            'goal_name': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+            'target_amount': forms.TextInput(attrs={'class': INPUT_CLASSE}),
+            'deadline': forms.DateInput(attrs={'class': INPUT_CLASSE, 'type': 'date'}),
+        }

@@ -1,0 +1,68 @@
+{% extends "layouts/base_auth.html" %}
+{% block content %}
+<div class="flex items-center justify-center p-6 sm:p-12 w-full">
+    <div class="max-w-xl">
+        <h1
+            class="mb-4 text-center text-xl font-semibold text-gray-700 dark:text-gray-200">
+            Politique de confidentialité
+        </h1>
+        <div>
+            <main>
+                <section>
+                    <h2>Informations que nous collectons</h2>
+                    <p>Lorsque vous utilisez notre application, nous pouvons collecter les types d'informations suivants :</p>
+                    <ul>
+                        <li>Informations personnelles : telles que votre nom, adresse e-mail, numéro de téléphone, sexe, etc.</li>
+                        <li>Informations sur les transactions : détails des transactions financières effectuées dans l'application.</li>
+                        <li>Informations de compte : détails de votre compte bancaire, soldes, types de comptes, etc.</li>
+                        <li>Informations d'utilisation : interactions avec l'application, pages visitées, fonctionnalités utilisées, etc.</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Comment nous utilisons vos informations</h2>
+                    <p>Nous utilisons les informations collectées dans le but de fournir, maintenir, protéger et améliorer notre application de gestion financière.</p>
+                </section>
+                <section>
+                    <h2>Partage des informations</h2>
+                    <p>Nous ne partagerons vos informations personnelles qu'avec des tiers dans les cas suivants :</p>
+                    <ul>
+                        <li>Avec votre consentement explicite.</li>
+                        <li>Avec les fournisseurs de services tiers.</li>
+                        <li>Pour respecter la loi.</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Sécurité des informations</h2>
+                    <p>Nous prenons des mesures raisonnables pour protéger vos informations personnelles contre tout accès non autorisé ou utilisation abusive.</p>
+                </section>
+                <section>
+                    <h2>Vos choix</h2>
+                    <p>Vous avez le droit de choisir comment vos informations sont collectées, utilisées et partagées.</p>
+                </section>
+                <section>
+                    <h2>Contactez-nous</h2>
+                    <p>Si vous avez des questions, des préoccupations ou des commentaires concernant notre politique de confidentialité, veuillez nous contacter à l'adresse suivante :</p>
+                    <p>[Adresse de contact]</p>
+                </section>
+            </main>
+            <footer>
+                <p>© 2024 Tous droits réservés - Votre Application</p>
+            </footer>
+        </div>
+        <div class="flex flex-row-reverse mt-3">
+            <a
+            class="text-sm font-medium text-yellow-600 dark:text-yellow-400 hover:underline"
+                href="{% url 'login' %}"
+                >
+            J'ai déja un compte
+            </a>
+            <a
+            class="mr-6 text-sm font-medium text-yellow-600 dark:text-yellow-400 hover:underline"
+                href="{% url 'login' %}"
+                >
+            Céer un compte
+            </a>
+        </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -16,7 +16,7 @@ const barConfig = {
       {
         label: 'Bags',
         backgroundColor: '#7e3af2',
-        // borderColor: window.chartColors.blue,
+        // borderColor: window.chartColors.yellow,
         borderWidth: 1,
         data: [66, 33, 43, 12, 54, 62, 84],
       },

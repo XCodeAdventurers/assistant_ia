@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-import google.generativeai as genai
+# import google.generativeai as genai
 
 
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'web',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -141,5 +142,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-genai.configure(api_key=GOOGLE_API_KEY)
-MODEL = genai.GenerativeModel('gemini-pro')
+# genai.configure(api_key=GOOGLE_API_KEY)
+# MODEL = genai.GenerativeModel('gemini-pro')
+
+
+PAYPAL_RECEIVER_EMAIL = 'sb-92au122120463@business.example.com' # where cash is paid into
+PAYPAL_TEST = True
+PAYPAL_BUY_BUTTON_IMAGE = 'https://res.cloudinary.com/the-proton-guy/image/upload/v1685882223/paypal-PhotoRoom_v9pay7.png'

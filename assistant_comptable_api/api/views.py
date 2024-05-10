@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Person, Business, Journal, AccountType, Account, Operation, PromptTemplate
-from .serializers import PersonSerializer, BusinessSerializer, JournalSerializer, AccountTypeSerializer, AccountSerializer, OperationSerializer, PromptTemplateSerializer
+from .models import Person, Category, AccountType, Account, Transaction, Budget, FinancialGoal
+from .serializers import PersonSerializer, CategorySerializer, AccountTypeSerializer, AccountSerializer, TransactionSerializer, BudgetSerializer, FinancialGoalSerializer
 
 class PersonAPIView(APIView):
     def get(self, request, pk=None):
@@ -34,99 +34,35 @@ class PersonAPIView(APIView):
         person.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class BusinessAPIView(APIView):
+class CategoryAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
-            business = Business.objects.get(pk=pk)
-            serializer = BusinessSerializer(business)
+            category = Category.objects.get(pk=pk)
+            serializer = CategorySerializer(category)
         else:
-            businesses = Business.objects.all()
-            serializer = BusinessSerializer(businesses, many=True)
+            categories = Category.objects.all()
+            serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = BusinessSerializer(data=request.data)
+        serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
-        business = Business.objects.get(pk=pk)
-        serializer = BusinessSerializer(business, data=request.data)
+        category = Category.objects.get(pk=pk)
+        serializer = CategorySerializer(category, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        business = Business.objects.get(pk=pk)
-        business.delete()
+        category = Category.objects.get(pk=pk)
+        category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class JournalAPIView(APIView):
-    def get(self, request, pk=None):
-        if pk:
-            journal = Journal.objects.get(pk=pk)
-            serializer = JournalSerializer(journal)
-        else:
-            journals = Journal.objects.all()
-            serializer = JournalSerializer(journals, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = JournalSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request, pk):
-        journal = Journal.objects.get(pk=pk)
-        serializer = JournalSerializer(journal, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        journal = Journal.objects.get(pk=pk)
-        journal.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# class TransactionAPIView(APIView):
-#     def get(self, request, pk=None):
-#         if pk:
-#             transaction = Transaction.objects.get(pk=pk)
-#             serializer = TransactionSerializer(transaction)
-#         else:
-#             transactions = Transaction.objects.all()
-#             serializer = TransactionSerializer(transactions, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = TransactionSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def put(self, request, pk):
-#         transaction = Transaction.objects.get(pk=pk)
-#         serializer = TransactionSerializer(transaction, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def delete(self, request, pk):
-#         transaction = Transaction.objects.get(pk=pk)
-#         transaction.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class AccountTypeAPIView(APIView):
     def get(self, request, pk=None):
@@ -158,14 +94,13 @@ class AccountTypeAPIView(APIView):
         account_type.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class AccountAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
             account = Account.objects.get(pk=pk)
             serializer = AccountSerializer(account)
         else:
-            accounts = Account.objects.all()
+            accounts = Account.objects.filter(user=request.user)
             serializer = AccountSerializer(accounts, many=True)
         return Response(serializer.data)
 
@@ -189,67 +124,103 @@ class AccountAPIView(APIView):
         account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class OperationAPIView(APIView):
+class TransactionAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
-            operation = Operation.objects.get(pk=pk)
-            serializer = OperationSerializer(operation)
+            transaction = Transaction.objects.get(pk=pk)
+            serializer = TransactionSerializer(transaction)
         else:
-            operations = Operation.objects.all()
-            serializer = OperationSerializer(operations, many=True)
+            account_id = request.GET.get('account')
+            category_id = request.GET.get('category')
+
+            transactions = Transaction.objects.filter(user=request.user)
+
+            if account_id != "-1":
+                transactions = transactions.filter(account__id__in=[account_id])
+        
+            if category_id != "-1":
+                transactions = transactions.filter(category__id__in=[category_id])
+
+            serializer = TransactionSerializer(transactions, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = OperationSerializer(data=request.data)
+        serializer = TransactionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
-        operation = Operation.objects.get(pk=pk)
-        serializer = OperationSerializer(operation, data=request.data)
+        transaction = Transaction.objects.get(pk=pk)
+        serializer = TransactionSerializer(transaction, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        print(pk)
-        #operation = Operation.objects.get(pk=pk)
-        #operation.delete()
+        transaction = Transaction.objects.get(pk=pk)
+        transaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class PromptTemplateAPIView(APIView):
+class BudgetAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
-            prompt_template = PromptTemplate.objects.get(pk=pk)
-            serializer = PromptTemplateSerializer(prompt_template)
+            budget = Budget.objects.get(pk=pk)
+            serializer = BudgetSerializer(budget)
         else:
-            prompt_templates = PromptTemplate.objects.all()
-            serializer = PromptTemplateSerializer(prompt_templates, many=True)
+            budgets = Budget.objects.filter(user=request.user)
+            serializer = BudgetSerializer(budgets, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = PromptTemplateSerializer(data=request.data)
+        serializer = BudgetSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
-        prompt_template = PromptTemplate.objects.get(pk=pk)
-        serializer = PromptTemplateSerializer(prompt_template, data=request.data)
+        budget = Budget.objects.get(pk=pk)
+        serializer = BudgetSerializer(budget, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        prompt_template = PromptTemplate.objects.get(pk=pk)
-        prompt_template.delete()
+        budget = Budget.objects.get(pk=pk)
+        budget.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class FinancialGoalAPIView(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            financial_goal = FinancialGoal.objects.get(pk=pk)
+            serializer = FinancialGoalSerializer(financial_goal)
+        else:
+            financial_goals = FinancialGoal.objects.filter(user=request.user)
+            serializer = FinancialGoalSerializer(financial_goals, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = FinancialGoalSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk):
+        financial_goal = FinancialGoal.objects.get(pk=pk)
+        serializer = FinancialGoalSerializer(financial_goal, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        financial_goal = FinancialGoal.objects.get(pk=pk)
+        financial_goal.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 

@@ -1,38 +1,32 @@
 
-from api.models import Person, Business, Journal, AccountType, Account, Operation, PromptTemplate
+from api.models import Person, Account, Category, AccountType, PromptTemplate
 from django.contrib.auth.models import User, Group
 
 def run():
     User.objects.exclude(username__in=["amk"]).delete()
     models = [
         Person,
-        Business,
-        Journal,
         Account,
         AccountType,
+        Category
     ]
     for m in models:
         m.objects.all().delete()
-    
-    # Créer les groupes 
-    account_plan_business, _ = Group.objects.get_or_create(name="account_plan_business")
-    account_plan_personal, _ = Group.objects.get_or_create(name="account_plan_personal")
-    
-    
-    #Créer les types de compte
-    AccountType.objects.create(name="produit", debit_operation=AccountType.OPERATIONS[1][0], credit_operation=AccountType.OPERATIONS[0][0])
-    AccountType.objects.create(name="charge", debit_operation=AccountType.OPERATIONS[0][0], credit_operation=AccountType.OPERATIONS[1][0])
-    AccountType.objects.create(name="actif", debit_operation=AccountType.OPERATIONS[0][0], credit_operation=AccountType.OPERATIONS[1][0])
-    AccountType.objects.create(name="passif", debit_operation=AccountType.OPERATIONS[1][0], credit_operation=AccountType.OPERATIONS[0][0])
-
-    
+        
 
     data_person = [
         {
             "first_name": "Abdoul Malik",
             "last_name": "KONDI",
             "email": "abdoulmalikkondi8@gmail.com",
-            "phone_number": "+22893561240",
+            "phone_number": "93561240",
+            "sexe": "M"
+        },
+        {
+            "first_name": "Abdoul Malik",
+            "last_name": "KONDI",
+            "email": "abdoulmalikkondi9@gmail.com",
+            "phone_number": "98271314",
             "sexe": "M"
         }
     ]
@@ -40,20 +34,41 @@ def run():
     for data in data_person:
         person = Person(**data)
         person.bind_user("123456789")
-        person.user.groups.add(account_plan_personal)
+        
+
+    categories = [
+        ("Alimentation 🍲"),
+        ("Logement 🏠"),
+        ("Transport 🚗"),
+        ("Divertissement 🎮"),
+        ("Santé 💊"),
+        ("Éducation 📚"),
+        ("Vêtements 👕"),
+        ("Voyages ✈️"),
+        ("Factures 📄"),
+        ("Épargne 💰"),
+        ("Electricité 💡"),
+        ("Eau 💧"),
+        ("Salaire 💵"),
+        ("Revenus locatifs 🏠"),
+        ("Investissements 💼"),
+        ("Bourses 📈"),
+        ("Ventes en ligne 🛍️"),
+        ("Prime 💼"),
+        ("Autres revenus 💰")
+    ]
+
+
+    for category_name in categories:
+        Category.objects.get_or_create(name=category_name)
+
+    account_types = [
+        ("Compte courant 💳"),
+        ("Épargne 💰"),
+        ("Carte de crédit 💳"),
+        ("Caisse 💼"),
+    ]
     
-    # data_business = [
-    #     {
-    #         "name": "KONDI GLOBAL",
-    #         "localisation_gps": "",
-    #         "country": "Togo",
-    #         "town": "Sokodé",
-    #         "district": "komah",
-    #         "person": person,
-    #     }
-    # ]
-    
-    # for data in data_business:
-    #     Business.objects.create(**data)
-    
-    
+    for account_type_name in account_types:
+        AccountType.objects.get_or_create(name=account_type_name)
+

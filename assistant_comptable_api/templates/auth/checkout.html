@@ -1,0 +1,31 @@
+{% extends "layouts/base_auth.html" %}
+{% load static %}
+{% block content %}
+<div class="flex items-center justify-center p-6 sm:p-12 w-full">
+    <div class="max-w-xl">
+        <style>
+            input {
+                width: 500px;
+            }
+        </style>
+        <div class="w-full flex flex-col items-center mb-6">
+            <img src="{% static "assets/img/slider/budget.png" %}" width="82px" alt="">
+            <a href="/" class="mt-6">
+                <label for="" class="text-lg font-bold">Money Tracker</label>
+            </a>
+        </div>
+        <h1
+            class="mb-4 text-center text-xl font-semibold text-gray-700 dark:text-gray-200">
+           <span>Payer avec</span><span class="text-blue-600"> Paypal</span> <span>ou</span> <span class="text-green-600">CinetPay</span>
+        </h1>
+        <div>
+            {{ paypal.render }}
+        </div>
+        <div class="w-full border border-gray-300 rounded-full flex flex-col items-center">
+            <a href="{% url 'cinet_pay_payement' %}" class="">
+                <img src="{% static "assets/img/cynet.webp" %}" width="300px" alt="cinetpay_logo">
+            </a>
+        </div>
+    </div>
+  </div>
+{% endblock content %}

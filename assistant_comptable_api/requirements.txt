@@ -1,9 +1,13 @@
 django
-google-generativeai
+ipython
+# google-generativeai
 django-browser-reload
 django-extensions
 django-import-export
 django-rest-framework
 pillow
-ipython
 pypdf
+# paypalrestsdk
+python-decouple
+django-paypal
+#pip install -i https://test.pypi.org/simple/ cinetpay-sdk==0.1.1

@@ -1,18 +1,20 @@
+{% load static %}
 <!-- Desktop sidebar -->
 <aside
 class="hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
 <div class="py-4 text-gray-500 dark:text-gray-400">
   <a
-    class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200"
-    href="#"
+    class="ml-6 text-lg font-bold text-gray-800 flex space-x-3"
+    href="/"
   >
-    Windmill
+    <img src="{% static "assets/img/slider/budget.png" %}" width="50px" alt="">
+    <span>Money Tracker</span>
   </a>
   <ul class="mt-6">
     <li class="relative px-6 py-3">
       <!-- Active items have the snippet below -->
       <!-- <span
-        class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+        class="absolute inset-y-0 left-0 w-1 bg-yellow-600 rounded-tr-lg rounded-br-lg"
         aria-hidden="true"
       ></span> -->
 
@@ -20,7 +22,7 @@ class="hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrin
       <!-- text-gray-800 dark:text-gray-100 -->
       <a
         class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-        href="../index.html"
+        href="{% url 'web:dashboard' %}"
       >
         <svg
           class="w-5 h-5"
@@ -40,7 +42,6 @@ class="hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrin
       </a>
     </li>
   </ul>
-  {% if is_account_plan_business %}
   <ul>
     <li class="relative px-6 py-3">
         <a
@@ -65,7 +66,7 @@ class="hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrin
     <li class="relative px-6 py-3">
       <a
         class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-        href="{% url "web:journals" %}">
+        href="{% url 'web:budgets' %}">
         <svg
           class="w-5 h-5"
           aria-hidden="true"
@@ -79,13 +80,13 @@ class="hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrin
             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
           ></path>
         </svg>
-        <span class="ml-4">Journaux</span>
+        <span class="ml-4">Bugets</span>
       </a>
     </li>
     <li class="relative px-6 py-3">
       <a
         class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-        href="{% url "web:operations" %}">
+        href="{% url 'web:transactions' %}">
         <svg
           class="w-5 h-5"
           aria-hidden="true"
@@ -99,13 +100,33 @@ class="hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrin
             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
           ></path>
         </svg>
-        <span class="ml-4">Opérations</span>
+        <span class="ml-4">Transactions</span>
       </a>
     </li>
     <li class="relative px-6 py-3">
       <a
         class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-        href="{% url "web:assistance" %}"
+        href="{% url 'web:goals' %}">
+        <svg
+          class="w-5 h-5"
+          aria-hidden="true"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+          ></path>
+        </svg>
+        <span class="ml-4">Objectifs</span>
+      </a>
+    </li>
+    <li class="relative px-6 py-3">
+      <a
+        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+        href="{% url 'web:assistance' %}"
       >
         <svg
           class="w-5 h-5"
@@ -125,72 +146,6 @@ class="hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrin
       </a>
     </li>
   </ul>
-  {% else %}
-  <ul>
-    <li class="relative px-6 py-3">
-        <a
-          class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-          href="{% url "web:accounts" %}">
-          <svg
-            class="w-5 h-5"
-            aria-hidden="true"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path
-              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-            ></path>
-          </svg>
-          <span class="ml-4">Comptes</span>
-        </a>
-    </li>
-    <li class="relative px-6 py-3">
-      <a
-        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-        href="{% url "web:operations" %}">
-        <svg
-          class="w-5 h-5"
-          aria-hidden="true"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path
-            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-          ></path>
-        </svg>
-        <span class="ml-4">Opérations</span>
-      </a>
-    </li>
-    <li class="relative px-6 py-3">
-      <a
-        class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-        href="{% url "web:assistance" %}"
-      >
-        <svg
-          class="w-5 h-5"
-          aria-hidden="true"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-          ></path>
-        </svg>
-        <span class="ml-4">Assistant IA</span>
-      </a>
-    </li>
-  </ul>
-  {% endif %}
   
 </div>
 </aside>
@@ -222,13 +177,13 @@ x-transition:leave-end="opacity-0 transform -translate-x-20"
     class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200"
     href="#"
   >
-    Windmill
+    Money Tracker
   </a>
   <ul class="mt-6">
     <li class="relative px-6 py-3">
       <!-- Active items have the snippet below -->
       <!-- <span
-        class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+        class="absolute inset-y-0 left-0 w-1 bg-yellow-600 rounded-tr-lg rounded-br-lg"
         aria-hidden="true"
       ></span> -->
 

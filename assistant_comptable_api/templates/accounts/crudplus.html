@@ -1,7 +1,7 @@
 
 <script>
     const BASE_URL_API = "/api/";
-    const BASE_URL_WEB = "/web/";
+    const BASE_URL_WEB = "/money_tracker/";
     const model_name = "accounts";
 
     const MODEL_BASE_URL_API = BASE_URL_API+model_name+"/";
@@ -44,12 +44,9 @@
                     console.log(results);
                     results.forEach(function (data) {
                         let new_row = dt.row.add([
+                            data.account_name,
                             data.account_type.name,
-                            data.number,
-                            data.name,
-                            data.solde_debit,
-                            data.solde_credit,
-                            data.solde,
+                            data.balance,
                             generateActionMenu(data.id),
                         ]).draw().node();
                     });
@@ -87,7 +84,7 @@
         return `
         <div class="flex items-center space-x-4 text-sm">
             <button
-                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-yellow-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                 aria-label="Edit"
                 onclick="edit_object(${id})">
                 <svg

@@ -2,29 +2,36 @@ from django.urls import path
 from .views import (
     homeViews,
     accountsViews,
-    operationsViews,
+    budgetsViews,
+    transactionsViews,
+    goalViews,
     assistanceView,
-    journalsViews
 )
 
 app_name="web"
 
 urlpatterns = [
-    path('', view=homeViews.home, name='home'),
-    path('operations/', view=operationsViews.index, name='operations'),
-    path('operations/create/', view=operationsViews.create, name='user_create'),
-    path('operations/update/<int:id>/', view=operationsViews.update, name='operations_update'),
-    path('operations/delete/<int:id>/', view=operationsViews.delete, name='operations_delete'),
+    path('', view=homeViews.dashboard, name='dashboard'),
 
     path('accounts/', view=accountsViews.index, name='accounts'),
-    path('accounts/create/', view=accountsViews.create, name='user_create'),
-    path('accounts/update/<int:id>/', view=accountsViews.update, name='accounts_update'),
-    path('accounts/delete/<int:id>/', view=accountsViews.delete, name='accounts_delete'),
+    path('accounts/create/', view=accountsViews.create, name='account_create'),
+    path('accounts/update/<int:id>/', view=accountsViews.update, name='account_update'),
+    path('accounts/delete/<int:id>/', view=accountsViews.delete, name='account_delete'),
 
-    path('journals/', view=journalsViews.index, name='journals'),
-    path('journals/create/', view=journalsViews.create, name='journals_create'),
-    path('journals/update/<int:id>/', view=journalsViews.update, name='journals_update'),
-    path('journals/delete/<int:id>/', view=journalsViews.delete, name='journals_delete'),
+    path('budgets/', view=budgetsViews.index, name='budgets'),
+    path('budgets/create/', view=budgetsViews.create, name='budget_create'),
+    path('budgets/update/<int:id>/', view=budgetsViews.update, name='budget_update'),
+    path('budgets/delete/<int:id>/', view=budgetsViews.delete, name='budget_delete'),
+
+    path('transactions/', view=transactionsViews.index, name='transactions'),
+    path('transactions/create/', view=transactionsViews.create, name='transaction_create'),
+    path('transactions/update/<int:id>/', view=transactionsViews.update, name='transaction_update'),
+    path('transactions/delete/<int:id>/', view=transactionsViews.delete, name='transaction_delete'),
+
+    path('goals/', view=goalViews.index, name='goals'),
+    path('goals/create/', view=goalViews.create, name='goal_create'),
+    path('goals/update/<int:id>/', view=goalViews.update, name='goal_update'),
+    path('goals/delete/<int:id>/', view=goalViews.delete, name='goal_delete'),
 
     path('assistance', view=assistanceView.index, name='assistance'),
     path('stream/', assistanceView.streamView, name='stream_view'),
