@@ -19,6 +19,7 @@ class Person(models.Model):
     last_name = models.CharField(max_length=50, verbose_name="Nom de famille")
     email = models.EmailField(unique=True, null=True, blank=True, verbose_name="Adresse email")
     phone_number = models.CharField(max_length=50, unique=True, verbose_name="Numéro de téléphone")
+    has_pay = models.BooleanField(default=False)
     SEXE_CHOICES = [
         ('F', 'Féminin'),
         ('M', 'Masculin')

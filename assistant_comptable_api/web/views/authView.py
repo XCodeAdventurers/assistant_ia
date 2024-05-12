@@ -22,9 +22,7 @@ def custom_login(request):
         email_or_contact = inputs.get('email_or_contact')
         password = inputs.get('password')
         if email_or_contact!="" and password!="":
-            
             person = None
-            
             try:
                 person = Person.objects.get(phone_number=email_or_contact)
             except Exception as e:
@@ -80,13 +78,12 @@ def custom_register(request):
 def custom_logout(request):
     logout(request)
     return redirect('/login')
-#sb-xyvki22120476@personal.example.com
-#Q-_Dc2b'
+
 def checkout(request):
     host = request.get_host()
     paypal_checkout = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': 26,
+        'amount': 50,
         'item_name': "Money Tracker",
         'invoice': uuid.uuid4(),
         'currency_code': 'USD',
@@ -106,8 +103,10 @@ def success(request):
     user_id = cache.get('user_id')
     if user_id is not None:
         try:
-            user = Person.objects.get(user__id=user_id).user
-            login(request, user)
+            person = Person.objects.get(user__id=user_id)
+            person.has_pay = True
+            person.save()
+            login(request, person.user)
             cache.delete('user_id')
             return redirect('web:accounts')
         except Exception as e:
@@ -138,14 +137,14 @@ def cinet_pay_payement(request):
     cinetpay = Cinetpay(apikey,site_id)
 
     payment_data = { 
-        'amount' : 100,
+        'amount' : 2500,
         'currency' : "XOF",            
         'transaction_id' : uuid.uuid4(),  
         'description' : "Payement du forfait de Money Tracker",
         'notify_url': f"http://{host}{reverse('payment-cinet-pay-success')}",  
         'return_url': f"http://{host}{reverse('payment-cinet-pay-success')}",     
-        'customer_name' : "XXXXXXXXXXXX",                              
-        'customer_surname' : "XXXXXXXXXXXXX",       
+        'customer_name' : "m",                              
+        'customer_surname' : "m",       
     }  
     
     
@@ -162,8 +161,10 @@ def cinet_pay_success(request):
     user_id = cache.get('user_id')
     if user_id is not None:
         try:
-            user = Person.objects.get(user__id=user_id).user
-            login(request, user)
+            person = Person.objects.get(user__id=user_id)
+            person.has_pay = True
+            person.save()
+            login(request, person.user)
             cache.delete('user_id')
             return redirect('web:accounts')
         except Exception as e:
