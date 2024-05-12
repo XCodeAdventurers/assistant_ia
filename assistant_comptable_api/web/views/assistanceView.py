@@ -12,7 +12,7 @@ MODEL_MANE = "assistance"
 ROOT_FOLDER = "chats"
 INDEX_PATH = f"{ROOT_FOLDER}/index.html"
 FORM_PARTIAL_PATH = f"{ROOT_FOLDER}/partial_form_modal_add.html"
-# MODEL = settings.MODEL
+MODEL = settings.MODEL
 
 def load_pre_context():
     result_path = settings.BASE_DIR / "media/documents/plan_comptable_syscoada.txt"
